@@ -1,0 +1,133 @@
+
+Criar ambiente Virtual : conda create --name python2 python=2.7 -> Cria um ambiente virtual com python 2.7
+Selecionar o ambiente: activate python2;
+deselecionar o ambiente: deactivate;
+
+info --envs -> Mostra todos os ambientes virtuais
+
+-------------------------------------------
+
+PYTHON COMANDOS
+
+TYPE() - TIPO DA VARIAVEL
+
+var = 'nome _variavel'
+idade = 25 
+('rodrigo: {one} e tenho {two} anos'.format(one=var,two=idade))
+
+							LISTA
+
+
+lista = [1.0, 'Hello', [1, 2, 30]]
+s = lista[:2] -> O colchete com : seleciona parte da lista
+
+String = 'nome_de_variavel'
+
+split -> divide a string
+map -> passa em todas posições
+filter -> Caso for verdade pega o valor
+-----------------------------------------------------------------------------------------------------------------
+NUMPY
+
+np.array(lista) -> cria o array ou matrizes de n dimensões
+np.arange(inicio,fim,de quanto em quanto) -> cria arrays de numeros Ranger
+np.zeros(qtd) -> cria um array de n-elementos zerados
+np.eye(qtd) -> Cria uma matriz endentidade
+np.linspace(inicio,fim,qr exibir quantos valores da lista)
+np.random.rand(qtd valores aleatorios) -> Distribuição uniforme
+np.random.randn(qtd valores aleatorios) -> Distribuição 
+np.random.randint(0,100,10) -> Cria um array de valore aleatorio de 0 a 100
+np.round(np.random.rand(5)*100,0) -> arredonda primeiro parametro o valor o segundo casa decimal
+np.unique(df['col2']) -> Trás resultados unicos da coluna
+arr.reshape((5,5)) -> Pega o array e o transforma exemplo matriz de 5x5
+arr.shape -> Tamanho do Array ou matriz - Não tem parentes pois é parametro/atributo
+arr.max -> maior valor do array
+arr.min -> menor valor
+arr.argmax() - > retorna o indice da posição do maior valor
+arr.argmin() - > retorna o indice da posição do menor valor
+arr[:2][:2] -> Recorta um Array
+arr2 = arr[:] -> Faz um apontamento para o arr, mudando o arr2 muda o arr para não ocasionar utiliza o .copy()
+arr2 = arr[:3].copy()
+arr[1:4,5:] -> Antes da virgula seleciona linha dps coluna 
+bol = arr > 40 pega os valores maior que 40
+arr[bol] -> Devolve em formato de numeros	
+np.srqt(Array)
+np.exp(Array) -> Exponenciaçao
+np.mean(Array) -> Média do Array
+np.std(Array) -> Desvio padrão
+np.sin(Array) -> Senho dos elementos
+np.max(Array)
+np.min(Array)
+mat.sum(axis=0) -> Soma de coluna 0 e 1 linha
+np.random.seed(101) -> Seta os mesmo numeros em qualquer computador SEED
+
+-----------------------------------------------------------------------------------------------------------------
+PANDA
+
+pd.Series(data = minha_lista, index=labels) -> cria algo parecido com dicionario minha_lista é sua lista e labels é oq vai ser associado
+ser1 + ser2 -> Soma 2 series baseadas no INDICE 
+df = pd.DataFrame(np.random.randn(5,4),index='A B C D E'.split(),columns='W X Y Z'.split()) -> Cria DataFrame - 1º Seus valores 2º Indice 3ºColumas
+df['W'] -> Filtra colunas
+df[['W','Z']] -> Filtra mais de uma, voce cria lista por isso 2[]
+df['new'] = df['W'] + df['X'] -> Cria uma nova coluna através de uma soma de 2 colunas
+df.drop('new',axis=1) -> Deletar coluna 1º nome da coluna e 2º A linha
+df.drop('new',axis=1,inplace=True) -> Com Inplace ele ja apaga no arquivo.
+df.loc[['A','B'],['X','Z']] -> Filtrar a tabela 1º Parametro linha, 2º a colunas Baseado nos nomes indices e colunas
+df.iloc[1:4,2:] -> Filtras os dados com numpy com numeros.
+bol = df > 0 -> Faz seleção com base na condição retorno true e false
+df[bol] -> retorna ao inves do true e false retorna os valores da condições
+df[df['W']>0]['Y'] -> faz uma condicional onde retorna os valores maior que 0 na linha do 'W' e retorna a coluna Y
+df[(df['W'] > 0) & (df['Y'] > 1)] -> seleção bicondicional 
+
+MULTINÍVEIS
+
+df.reset_index(inplace=True) -> Reseta o indices setando como array [0,1,2,3,..], para mudar realmente passa parametro inplece = True
+df.set_index('Estado',inplace=True) -> Seta um novo indice para o DataFrame
+hier_index = list(zip(outside,inside)) -> Associa cada item da lista na outra lista
+hier_index = pd.MultiIndex.from_tuples(hier_index) -> Indice multinível que é passado como parametro para cria o data frame
+df = df.DataFrame(np.random.randn(6,2),index=hier_index, columns=['A','B'])
+df.loc['G1'].loc[1] -> acessar os valores deste data frame acima
+df.index.names = ['Grupo','Número']
+df.xs(1,level="Numero") -> Filtra sem precisar passar pelo Grupo no caso do exemplo
+
+AUSENTES
+
+df.dropna(axis,thresh=x) -> Deleta a linha onde há o NaN tendo outros parâmetros com shit + tab
+							thresh apaga a linha com a quantidade que passado para ele.
+df.fillna(value='') -> substitui os valores ausentes por outro valor
+df.fillna(method='ffill') -> substitui o valor ausentes pelo ultimo registro 
+
+GROUPBY
+
+group = df.groupby('Empresa') -> Agrupada com o parâmetro que é passado
+group.mean() -> Com o grupo você pode realizar várias operações
+group.sum()
+group.describe() -> Trás informações com algumas operações feitos como média desvioPadrao max min
+group.sum().loc['Sam'] -> Busca SAM neste group sum
+
+
+CONCATENAR, JUNTAR E MESCLAR
+PESQUISAR OLHAR DOCUMENTAÇÃO (PAR
+pd.concat([df1,df2,df3])-> concatena baseado na coluna pois o axis padrão é 0
+pd.merge(left,right,how="inner",on='key')-> junta os 2 DataFrame onde coluna key tem dados comuns
+left.join(right,how="outer") -> Igual do SQL onde junta oq está no join e onde não estiver no left coloca NaN
+
+OPERAÇÕES
+
+df['col2'].unique() -> Trás os resultados da coluna não repetindo dados
+df['col2'].nunique() -> Trás a quantidade de dados unicos da coluna.
+df['col2'].value_counts() -> Retorna os valores únicos e a quantidade que repete
+df['col3'].apply(vezes2) -> chama a função para cada elemento da col3 paracido com map (df['col2'].apply(lambda x: x*x))
+del df['col2'] -> a coluna que é passada METÓDO DO PYTHON
+df.sort_values(by='col2') ->  Ordena sua coluna passada no parâmetro
+df.isnull() -> Mostra os valores nullos 
+df.dropna() -> Apaga valores onde tem NaN apagando por padrao linha
+df.pivot_table(values='D',index=['A','B'], columns=('C')) -> Funciona como tabela dinâmica excel
+
+ENTRADA E SAÍDA DE DADOS
+
+df = pd.read_csv('exemplo',sep=',') -> importa o excel para seu dataFrame
+df.to_csv("exemplo.csv",sep=';',decimal=',') -> Exporta o DataFrame para excel
+df = pd.read_excel('Exemplo_Excel.xlsx',sheetname='Sheet1') -> importa o excel da planilha com nome 'Sheet1'
+df.to_excel("exemplo_Excel.xlsx",sheet_name='sheet1') -> Exporta para a planilha com nome sheet1
+
