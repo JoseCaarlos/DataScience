@@ -78,6 +78,8 @@ bol = df > 0 -> Faz seleção com base na condição retorno true e false
 df[bol] -> retorna ao inves do true e false retorna os valores da condições
 df[df['W']>0]['Y'] -> faz uma condicional onde retorna os valores maior que 0 na linha do 'W' e retorna a coluna Y
 df[(df['W'] > 0) & (df['Y'] > 1)] -> seleção bicondicional 
+sal['JobTitle'].head(n) Retorna os N primeiros 
+sum(sal[sal['Year'] == 2013]['JobTitle'].value_counts() == 1) -> o Sum admiti 0 para false e 1 para True
 
 MULTINÍVEIS
 
@@ -89,6 +91,7 @@ df = df.DataFrame(np.random.randn(6,2),index=hier_index, columns=['A','B'])
 df.loc['G1'].loc[1] -> acessar os valores deste data frame acima
 df.index.names = ['Grupo','Número']
 df.xs(1,level="Numero") -> Filtra sem precisar passar pelo Grupo no caso do exemplo
+df['Salario'].idxmax() -> a traz a linha que tem valor maximo
 
 AUSENTES
 
@@ -131,3 +134,57 @@ df.to_csv("exemplo.csv",sep=';',decimal=',') -> Exporta o DataFrame para excel
 df = pd.read_excel('Exemplo_Excel.xlsx',sheetname='Sheet1') -> importa o excel da planilha com nome 'Sheet1'
 df.to_excel("exemplo_Excel.xlsx",sheet_name='sheet1') -> Exporta para a planilha com nome sheet1
 
+CORRELAÇÃO
+sal['tamanho da string'] = sal['JobTitle'].apply(len)
+sal[['tamanho da string','TotalPayBenefits']].corr() -> Verifica se quanto maior a string maior o salario
+
+
+----------------------------------------------------------------------------------------------------
+MATPLOTLIB
+
+
+%matplotlib inline -> Exibi o grafico na linha
+
+plt.plot(x,y,'r--') -> Gera o grafico com  a cor RED 'r'  e os traços o grafico fica tracejado
+plt.xlabel('Eixo X') -> muda nome no eixo x
+plt.ylabel('Eixo Y') -> muda nome no eixo y
+plt.title('Titulo') -> muda nome o titulo
+
+plt.subplot(1,2,1) -> gera 2 graficos 1º Linha 2ºColuna 3ºO grafico que deseja trabalhar
+
+fig = plt.figure()-> Cria um figura em branco
+axes1 = fig.add_axes([0.1,0.1,0.8,0.8]) -> configura o tamanho da figura
+axes2 = fig.add_axes([0.2,0.5,0.3,0.3]) -> configura o tamanho da figura2 1ºmargem esquerda 2º baixo 3º direita 4ºcima
+axes1.plot(x,y)
+axes1.set_xlabel('Eixo x')
+axes1.set_title('Titulo')
+axes2.plot(y,x)
+
+fig,ax = plt.subplots()-> Instancia um objeto da classe matplotlib
+ax.plot(x,x**3,'b--')
+ax.plot(x,x**4,'g-.')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Titulo')
+
+fig,ax = plt.subplots(1,2) -> gera um Array de objetos
+
+fig,ax = plt.subplots(5,5)
+plt.tight_layout()-> Não deixa os graficos ficar sobrepostos
+
+
+fig = plt.figure(figsize=(50,20),dpi=400) -> nao entendi pois o metodo n afeta em nada
+
+fig,axes = plt.subplots(figsize=(12,8)) -> Altera o tamanho da figura
+axes.plot(x,y,'r-')
+axes.set_title('titulo')
+fig.savefig("imagem.png") -> salva a sua figura nos formatos png jpg gif
+
+axes.plot(x,y,'r-',label='x ^2') -> parametros labels adiciona legenda
+axes.legend(loc=0) -> Inserir legendas 1º posição da legenda no 0 deixa a lib escolher a melhor forma (menos dados em volta)
+
+ax.plot(x,x**2,color='#000000',linewidth=10,alpha=0.8,linestyle=':') -> linewidth largura da linha , alpha transparência, linestyle tipo da linha
+ax.plot(x,x**3,'r--')
+
+ax.set_xlim([0,2]) -> limite dos eixos
+ax.set_ylim([0,10]) ->mite dos eixos
