@@ -125,7 +125,7 @@ del df['col2'] -> a coluna que é passada METÓDO DO PYTHON
 df.sort_values(by='col2') ->  Ordena sua coluna passada no parâmetro
 df.isnull() -> Mostra os valores nullos 
 df.dropna() -> Apaga valores onde tem NaN apagando por padrao linha
-df.pivot_table(values='D',index=['A','B'], columns=('C')) -> Funciona como tabela dinâmica excel
+df.pivot_table(values='D',index=['A','B'], columns=('C')) -> Funciona como tabela dinâmica excel -> Reorganiza a tabela como você quer.
 
 ENTRADA E SAÍDA DE DADOS
 
@@ -188,3 +188,78 @@ ax.plot(x,x**3,'r--')
 
 ax.set_xlim([0,2]) -> limite dos eixos
 ax.set_ylim([0,10]) ->mite dos eixos
+
+
+---------------------------------------------------------------------------------------------------------------
+
+SEABORN
+
+PLOTS DE DISTRIBUIÇÃO
+tips = sns.load_dataset('tips') -> Importa nosso dataframe
+sns.distplot(tips['total_bill'],kde=False,bins=60) -> Gera uma distribução com uma variavel 1º dados, 2º linha do grafico, 3ºQtd de barras
+sns.jointplot(x='total_bill',y='tip',data=tips,kind='hex') -> Gera um histograma com 2 varias se tem relação, KIND -> Gera o tipo dele 'hex' um hexagonos com com cores mais forte com maior população, reg uma reta linear
+sns.pairplot(tips,hue='sex',palette='coolwarm') -> Gera um grafico com todas as possibilidades numericas, HUE cria uma analise dados com base em alguma coluna de texto exemplo Sexo.
+sns.rugplot(tips['total_bill']) -> Gera um traço para cada dado passado.
+sns.kdeplot(tips['total_bill']) -> KDE gera uma soma da distribuição normal centrada em seus dados. 
+
+PLOTS CATEGÓRICOS
+sns.barplot(x='sex',y='total_bill',data=tips,estimator=np.std) -> Gera um grafico onde mostra a media de cada sexo no total de compra, colocando o estimator
+																tem se o desvio padrão ao invés da media.
+sns.countplot(x='sex',data=tips)-> Mostra a quantidade de cada informação.
+sns.boxplot(x='day',y='total_bill',data=tips, palette='rainbow',hue='sex') -> um grafico onde tem se a 1º barra a 2º 25% dos dados 2º a 3º 50% dos dados, 3º a 4 75% dos dados e 4º total dos dados.
+																			com o hue irá quebrar os boxplot em 2 fem e masc
+  sns.boxplot(data=tips, palette='rainbow',orient='h') ->  Boxplot na horizontal
+  sns.violinplot(x='day',y='tip',data=tips,hue='sex',split=True) -> Gera um KDE com o boxplot mostrando a dispersão dos dados. split cria o lado esquerdo é fem e o direito masculino
+  sns.stripplot(x='day',y='total_bill',data=tips, jitter=True, hue='sex', split=True) -> forma uma linha de dados com bolas mas podendo ficar em cima da outra										
+																					com jitter os ponto fica um pouco do lado, split quebra os fem e masc
+sns.swarmplot(x='day',y='total_bill',data=tips, hue='sex',split=True) -> Mostra os dados um pouco mais separados que o stripplot.
+
+sns.swarmplot(x='day',y='total_bill',data=tips,color='black')
+sns.violinplot(x='day',y='total_bill',data=tips) -> com os 2 plots dando uma visão melhor
+sns.factorplot(x='sex',y='total_bill',data=tips,kind='bar') -> assume qualquer dos graficos acima com o parametro kind
+																
+sns.heatmap(crr, cmap='coolwarm', annot=True)-> Mostra a correlação entre as variáveis em formato de mapa de calor, 1º sua correlação, 2ºEsquema de cores, 3ºMostra valores dentro dos quadrados
+pf = fights.pivot_table(values='passengers',index='month',columns='year') -> Reorganiza a tabela com metodo do Pandas para melhor análise o value sempre é numerico
+sns.heatmap(pf,cmap='magma',linecolor='gray',linewidth=1) -> 2ºCor da linha que divide os quadrados, 3º a espessura da linha.
+sns.clustermap(pf,standard_scale=1) -> Faz um agrupamento dos dados Pesquisar mais sobre a biblioteca, 2º scala das cores.
+
+
+sns.lmplot(x='total_bill',y='tip',data=tips,hue='sex',col='day',aspect=0.6,size=5) -> 'COL' coloca cada dia em um grafico, 'ASPECT' Muda o aspecto do grafico	'SIZE' Tamanho do grafico
+sns.lmplot(x='total_bill',y='tip',data=tips,hue='sex',col='sex',row='time') -> 'ROW' Coloca esse dados em linhas
+sns.lmplot(x='total_bill',y='tip',data=tips,hue='sex',markers=['o','v'],scatter_kws={'s':50}) -> 'MARKERS' Substitui os pontos por outra representação
+																									'SCATTER_KWS' passa um dic 'S' de Size dando zoom e tirando
+
+PAIR GRIDS
+
+g = sns.PairGrid(iris) -> cria todos os graficos possiveis de dispersão de dados vazios
+g.map(plt.scatter) -> Com essa linha mostra as dispersão entre todas as variaveis -> Parecido com PairPlot
+
+g = sns.PairGrid(iris)
+g.map_diag(plt.hist) -> Gera Graficos de barras (Histograma na diagonal
+g.map_upper(plt.scatter) -> transforma a diagonal de cima em grafico de dispersão bolinhas
+g.map_lower(sns.kdeplot) -> Transforma a diagonal de baixo em grafico de kde com o parametro sns.kdeplot
+
+g = sns.FacetGrid(tips,col='time',row='smoker') -> Pega seu dados CATEGORICOS, fala q a coluna é time é a linha smoker
+g.map(plt.hist,'total_bill') -> monta o gráfico em função do 'total_bill'
+
+ESTILOS E CORES
+
+sns.set_style('ticks')-> Muda o estilo do grafico o fundo a borda
+sns.countplot(x='sex',data=tips) -> monta o grafico com quantidade de variavel
+sns.despine()-> Posso tirar o contorno de qualquer lado do grafico
+plt.figure(figsize=(12,8)) -> COmo o SEABORN faz parte do matplotlib ele pode usar o metodo para alter tamanho da figura
+sns.lmplot(x='total_bill',y='tip',data=tips,size=2,aspect=15) -> Regressão Linear podendo mudar os aspecto com size e aspect
+sns.set_context('poster',font_scale=1) -> muda o estilo do grafico podendo aumentar a fonte
+sns.lmplot(x='total_bill',y='tip',data=tips,hue='sex',palette='inferno) -> Pallete esquema de cores que pode se usado ao pesquisar em https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html
+
+
+df1['A'].hist() -> plota um histograma ficando mais bonito importando seaborn
+df2.plot.bar(stacked=True) -> Gera um grafico de barras com o parametro Stacked ele junta tudo na mesma barra
+df1.plot.line(x=df1.index,y='B',figsize=(12,5),lw=1) -> Forma um grafico de linha.
+df1.plot.scatter(x='A',y='B',s=df1['C']) -> Com essa linha mostra as dispersão entre todas as variaveis entre as variaveis A e B e dependendo do valor C muda a cor das bolinhas
+df2.plot.box() -> Faz um box ploat
+df.plot.hexbin(x='A',y='B',gridsize=20,cmap='Oranges') -> Cria um grafico hexagonal 
+df.plot.kde() -> Mostra o kde de todas variaveis
+
+
+
