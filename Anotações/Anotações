@@ -80,6 +80,7 @@ df[df['W']>0]['Y'] -> faz uma condicional onde retorna os valores maior que 0 na
 df[(df['W'] > 0) & (df['Y'] > 1)] -> seleção bicondicional 
 sal['JobTitle'].head(n) Retorna os N primeiros 
 sum(sal[sal['Year'] == 2013]['JobTitle'].value_counts() == 1) -> o Sum admiti 0 para false e 1 para True
+df['Day of Week'].map(dmap) -> muda a tabela com base no dicionário passado
 
 MULTINÍVEIS
 
@@ -244,6 +245,7 @@ g.map(plt.hist,'total_bill') -> monta o gráfico em função do 'total_bill'
 
 ESTILOS E CORES
 
+
 sns.set_style('ticks')-> Muda o estilo do grafico o fundo a borda
 sns.countplot(x='sex',data=tips) -> monta o grafico com quantidade de variavel
 sns.despine()-> Posso tirar o contorno de qualquer lado do grafico
@@ -253,6 +255,9 @@ sns.set_context('poster',font_scale=1) -> muda o estilo do grafico podendo aumen
 sns.lmplot(x='total_bill',y='tip',data=tips,hue='sex',palette='inferno) -> Pallete esquema de cores que pode se usado ao pesquisar em https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html
 
 
+
+VISUALIZAÇÃO DE DADOS PANDAS
+
 df1['A'].hist() -> plota um histograma ficando mais bonito importando seaborn
 df2.plot.bar(stacked=True) -> Gera um grafico de barras com o parametro Stacked ele junta tudo na mesma barra
 df1.plot.line(x=df1.index,y='B',figsize=(12,5),lw=1) -> Forma um grafico de linha.
@@ -260,6 +265,60 @@ df1.plot.scatter(x='A',y='B',s=df1['C']) -> Com essa linha mostra as dispersão 
 df2.plot.box() -> Faz um box ploat
 df.plot.hexbin(x='A',y='B',gridsize=20,cmap='Oranges') -> Cria um grafico hexagonal 
 df.plot.kde() -> Mostra o kde de todas variaveis
+df2.plot.area(alpha=0.4) -> plota um grafico de areas
+--- tira legenda do quadro
+fig = plt.figure()
+sns.countplot(data=df,x='Day of Week',hue='Reason')
+plt.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+dayHour = df.groupby(by=['Day of Week','Hour']).count()['Reason'].unstack() ->Reorganiza sua matriz multnivel
+
+
+--------------------------------------------------------------------------------------------
+
+PLOTLY E CUFFLINKS
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+from plotly import __version__
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import cufflinks as cf
+init_notebook_mode(connected=True)
+cf.go_offline()
+
+df.iplot(kind='scatter',x='A',y='B',mode='markers') -> Gera um grafico de dispersão dos dados, mode p ficar de bolinhas
+df.iplot(kind='box') -> cria boxplot
+df2.iplot(kind='bar',x='Categoria',y='Valores') -> grafico de barras
+df3.iplot(kind='surface',colorscale='rdylbu') -> gera um grafico com 3DIMENSÕES 
+df[['A','B']].iplot(kind='spread') -> Análise de variaveis temporais PESQUISAR MAIS
+df['A'].iplot(kind='hist',bins=50) -> Gera im histograma
+df.iplot(kind='bubble',x='A',y='B', size='C') -> Gráfico de bolha size varia com a variavel C
+df.scatter_matrix() -> Gerá um grafico de matriz como SEABORN PESQUISAR
 
 
 
+
+------------------------------------------------------------------------------------------
+MACHINE LEARNING
+
+Regressões Lineares -> ler capitulo 2 e 3
+kaggle -> Dados reais da msm linha
+
+retorna 4 variaveis como resposta sendo test e train
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.4, random_state=101) -> Realiza divisão dos dados em duas partes passo x var parametros e y resultado final, test_size = 40% dos dados serão teste , random_state o algoritmo q irafazer a divisão
+
+from sklearn.linear_model import LinearRegression importa a bib de regressa linear
+lm = LinearRegression() cria um objeto dela
+lm.fit(x_train,y_train) -> função fit Encontra os parametros linear baseado no x e y train
+
+from sklearn import metrics
+print('MAE',metrics.mean_absolute_error(y_test,predict))
+print('MSE',metrics.mean_squared_error(y_test,predict))
+print('RMSE',np.sqrt(metrics.mean_squared_error(y_test,predict)))
+
+Balanço Viés-Variância ler capitulo 2
+Teoria
+
+Regressão Logística Seção 4 a 4.3
+Utiliza-se uma função logística conhecida como sigmoide
