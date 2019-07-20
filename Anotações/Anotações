@@ -242,6 +242,7 @@ g.map_lower(sns.kdeplot) -> Transforma a diagonal de baixo em grafico de kde com
 
 g = sns.FacetGrid(tips,col='time',row='smoker') -> Pega seu dados CATEGORICOS, fala q a coluna é time é a linha smoker
 g.map(plt.hist,'total_bill') -> monta o gráfico em função do 'total_bill'
+sns.set_style('whitegrid') muda fundo do grafico
 
 ESTILOS E CORES
 
@@ -321,4 +322,209 @@ Balanço Viés-Variância ler capitulo 2
 Teoria
 
 Regressão Logística Seção 4 a 4.3
+Classificações como se um email é ou não spam
 Utiliza-se uma função logística conhecida como sigmoide
+Matriz de Confusão -> método para avaliar o resultado
+pega todos True e soma e divide o total e o resultado da entre 0 e 1
+
+pd.get_dummies(train['Sex'],drop_first=True) -> pega coluna Categorica como sexo e transforma em 0 e 1 drop_first apaga a primeira coluna
+
+
+K NEAREST NEIGHBORS (KNN) Seção 4.6 introduction to statistical Learning
+from sklearn.preprocessing import StandardScaler método de padronização -> Pois os valores´podem ter pesos assim ficam todos no msm nivel
+scaler = StandardScaler() instancia um objeto da classe
+scaler.fit(df.drop('TARGET CLASS',axis=1)) seleciona os dados para ser treinados
+df_normalizado = scaler.transform(df.drop('TARGET CLASS',axis=1)) -> Realiza o processo de normalização dos dados
+
+df_param = pd.DataFrame(df_normalizado,columns=df.columns[:-1]) -> cria um DataFrame com os dados normalizados
+
+from sklearn.model_selection import train_test_split ->Treinar o algoritmo
+
+x_train, x_test, y_train, y_test = train_test_split(df_param,df['TARGET CLASS'],test_size=.3) -> Fazendo as divisões dos dados
+
+from sklearn.neighbors import KNeighborsClassifier Biblioteca para classificar
+
+knn = KNeighborsClassifier(n_neighbors=1) -> instancio a classe e passo como parametro a qtd de vizinhos
+
+knn.fit(x_train,y_train) treinar os dados
+
+pred = knn.predict(x_test) testar a previsao
+
+from sklearn.metrics import classification_report,confusion_matrix biblioteca para ver o resultado
+
+print(classification_report(y_test,pred))
+
+print(confusion_matrix(y_test,pred))
+
+ARVORES DE DECISÃO E FLORESTAS ALEATÓRIAS SEÇÃO 8 DO INTRODUTION
+
+analisa a linha na horizontal
+ avores aleatorias
+ x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=.3) monta o modelo
+ 
+ from sklearn.tree import DecisionTreeClassifier
+ dtree = DecisionTreeClassifier()
+ dtree.fit(x_train,y_train)
+ pred = dtree.predict(x_test)
+ from sklearn.metrics import classification_report, confusion_matrix
+ print(classification_report(y_test,pred))
+ 
+ FLORESTAS ALEATORIA
+ from sklearn.ensemble import RandomForestClassifier
+ RFC = RandomForestClassifier(n_estimators=200) -> parametro qtd de arvores aleatotias
+ 
+ rfc.fit(x_train,y_train)
+	rfc_pred = rfc.predict(x_test)
+
+SVM SEÇÃO 9 DO INTRODUTION
+
+Tenta separa os seus dados maximizando as margens dos vetores de suporte (Cria um plano linearmente)
+kernel trick transforma os planos dos dados
+from sklearn.datasets import load_breast_cancer importação de dados reaia relacionado ao cancer
+cancer = load_breast_cancer()
+cancer.keys() -> descrição
+
+from sklearn.model_selection import train_test_split
+
+x_train,x_test,y_train,y_test = train_test_split(df_cancer,np.ravel(df_target),test_size=0.3)
+
+from sklearn.svm import SVC
+
+model = SVC()
+
+model.fit(x_train,y_train)
+
+pred = model.predict(x_test)
+
+print(classification_report(y_test,pred))
+print('\n')
+print(confusion_matrix(y_test,pred)) 
+
+->>>>>>>>>> Resultado não é o melhor não temos conhecimentos dos parametros com utilaza um metodo q testa tds possibilidades 
+
+param_grid = {'C':[0.1,1,10,100,100],'gamma':[1,0.1,0.001,0.0001],'kernel':['rbf']} 
+C -> Controla custo de classificações errada sempre fitando os dados de train
+gama -> Gaussiana com alta variancia, 
+
+from sklearn.model_selection import GridSearchCV
+
+ grid = GridSearchCV(SVC(),param_grid,refit=True,verbose=3)
+
+grid.fit(x_train,y_train)
+
+grid.best_params_
+
+pred = grid.predict(x_test)
+
+print(classification_report(y_test,pred))
+print('\n')
+print(confusion_matrix(y_test,pred))
+
+ K Means Clustering -> SEÇÃO 10 DO INTRODUTION
+ Separa os dados em grupos 
+ from sklearn.cluster import KMeans
+ 
+ kmeans = KMeans(n_clusters=2) -> quantidade de grupos 
+ kmeans.fit(df.drop('Private',axis=1))
+ kmeans.cluster_centers_
+ kmeans.labels_
+ 
+ 
+ANÁLISE DE COMPONENTE PRINCIPAL (PCA) SEÇÃO 10.2 DO INTRODUTION AULAS DE ALGEBRA LINEAR
+from sklearn.datasets import load_breast_cancer importa dados do proprio sklearn
+cancer = load_breast_cancer()
+cancer.keys()
+df = pd.DataFrame(cancer['data'],columns=cancer['feature_names'])
+
+from sklearn.preprocessing import StandardScaler Padroniza seus dados em uma escala
+scaler = StandardScaler()
+scaler.fit(df)
+scaled_data = scaler.transform(df)
+
+
+from sklearn.decomposition import PCA Treinamento do modelo PCA
+pca = PCA( n_components=2)
+pca.fit(scaled_data)
+x_pca = pca.transform(scaled_data)
+x_pca.shape
+
+PLOTA OS DADOS NO GRAFICO
+sns.set_style('whitegrid')
+plt.figure(figsize=(12,8))
+plt.scatter(x_pca[:,0],x_pca[:,1],c=cancer['target'],cmap='plasma')
+plt.xlabel('Primeiro componentes principal')
+plt.ylabel('Segundo componentes principal')
+
+
+Teoria do processamento de linguagem natural PLN ou NLP LER MAIS
+ Modelo de saco de palavras
+ 
+ import nltk
+ nltk.download() -> baixar a biblioteca stopwords onde retira-se pronomes,artigo, para não gerar ruidos nos modelos
+ messages = [line.rstrip() for line in open('smsspamcollection/SMSSpamCollection')] ->Limpa o texto com comando rstrip() tirando .,
+ 
+ for messagem_number,message in enumerate(messages[:15]): -> Gera uma coluna de index pros textos
+    print(messagem_number,message)
+    print('\n')
+ 
+ messages = pd.read_csv('smsspamcollection/SMSSpamCollection',sep='\t',names=['label','message']) -> Cria data framw
+ messages['lenght'] = messages['message'].apply(len) -> Cria uma coluna com tamanho de cada linha 
+ 
+ import string 
+ sempont = [car for car in mess if car not in string.punctuation] -> remove as pontuações da palavra transformando em lista de letras
+ sempont = ''.join(sempont) -> Join ele junta as palavras baseados no q passa de parametro nas aspas
+
+ from nltk.corpus import stopwords -> Biblioteca Stopwords
+ stopwords.words('english') -> contém uma lista de todas palavras onde não importa na frase
+ clean_mess = [word for word in tst.split() if word.lower() not in stopwords.words('english') ] -> Remove palavras inutéis
+ 
+ def txt_process(mess): -> Função onde remove pontuações e palavras inutéis
+    #Retira pontuações
+    nopunc = [char for char in mess if char not in string.punctuation]
+    
+    #juntar novam. para formar as Strings
+    nopunc = ''.join(nopunc)
+    
+    #Remover as Stop Words
+    sms = [word for word in nopunc.split() if word not in stopwords.words('english')]
+    
+    return sms
+	
+from sklearn.feature_extraction.text import CountVectorizer -> Biblioteca matriz esparça (Contém mt Zeros)
+bow_transformer = CountVectorizer(analyzer=txt_process).fit(messages['message']) -> Cria nossa matriz esperça
+print(len(bow_transformer.vocabulary_)) -> Total de palavras existentes
+
+message4 = messages['message'][3]
+print(message4) -> Pega palavra do df
+bow4 = bow_transformer.transform([message4]) -> mostra a msm com o bow_transformer
+
+
+
+from sklearn.feature_extraction.text import CountVectorizer
+countVectorizer = CountVectorizer()
+
+X = countVectorizer.fit_transform(X)
+
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=.3,random_state=101)
+
+from sklearn.naive_bayes import MultinomialNB
+nb = MultinomialNB()
+nb.fit(X_train,y_train)
+pred = nb.predict(X_test)
+from sklearn.metrics import classification_report,confusion_matrix
+from sklearn.ensemble import RandomForestClassifier
+
+COM TFIDF
+pipeline = Pipeline([
+    ('bow', CountVectorizer(analyzer=text_process)),
+    ('tfidf',TfidfTransformer()),
+    ('classifier', MultinomialNB()),
+])
+
+X = yelp_class['text']
+y = yelp_class['stars']
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=.3,random_state=101)
+pipeline.fit(X_train,y_train)
+pred = pipeline.predict(X_test)
+print(confusion_matrix(y_test,pred))
+print(classification_report(y_test,pred))
